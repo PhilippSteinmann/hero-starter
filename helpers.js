@@ -259,4 +259,71 @@ helpers.oppositeDirection = function(direction) {
         return "Stay";
 };
 
+helpers.randomInt = function(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// returns a random empty tile on board
+helpers.randomEmptyTile = function(game) {
+
+    // Start by picking random tile (x, y)
+    var x = helpers.randomInt(0, game.board.tiles.length);
+    var y = helpers.randomInt(0,  game.board.tiles.length);
+    var randomTile = game.board.tiles[y][x];
+
+    // If tile is unoccupied, return it
+    if (randomTile.type == "Unoccupied")
+        return [x, y];
+
+    // If tile is occupied, return nearest unoccupied tile
+    else {
+        console.log("Search");
+        var nearestUnoccupied = helpers.findNearestObjectDirectionAndDistance(game.board, randomTile, function(tile) {
+            return tile.type == "Unoccupied";
+        });
+        console.log(nearestUnoccupied);
+        return [nearestUnoccupied.coords[0], nearestUnoccupied.coords[1]];
+    }
+}
+
+// Add a health well at a random location
+helpers.addRandomHealthWell = function(game) {
+    var randomTile = helpers.randomEmptyTile(game);
+    var x = randomTile[0];
+    var y = randomTile[1];
+    game.addHealthWell(x, y);
+}
+
+// Add a diamond mine at a random location
+helpers.addRandomDiamondMine = function(game) {
+    var randomTile = helpers.randomEmptyTile(game);
+    var x = randomTile[0];
+    var y = randomTile[1];
+    game.addDiamondMine(x, y);
+}
+
+// Add an enemy (Team 1) at a random location
+helpers.addRandomEnemy = function(game) {
+    var randomTile = helpers.randomEmptyTile(game);
+    var x = randomTile[0];
+    var y = randomTile[1];
+    game.addHero(x, y, "Enemy (" + x + "," + y + ")", 1);
+}
+
+// Add a friend (Team 0) at a random location
+helpers.addRandomFriend = function(game) {
+    var randomTile = helpers.randomEmptyTile(game);
+    var x = randomTile[0];
+    var y = randomTile[1];
+    game.addHero(x, y, "Friend (" + x + "," + y + ")", 0);
+}
+
+// Add the hero (Team 0) at a random location
+helpers.addRandomMyHero = function(game) {
+    var randomTile = helpers.randomEmptyTile(game);
+    var x = randomTile[0];
+    var y = randomTile[1];
+    game.addHero(x, y, "MyHero", 0);
+}
+
 module.exports = helpers;

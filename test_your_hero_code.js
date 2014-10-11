@@ -1,32 +1,9 @@
-/*
-
-If you'd like to test your hero code locally,
-run this code using node (must have node installed).
-
-Please note that you DO NOT need to do this to enter javascript
-battle, it is simply an easy way to test whether your new hero 
-code will work in the javascript battle.
-
-To run:
-
-  -Install node
-  -Run the following in your terminal:
-
-    node test_your_hero_code.js
-
-  -If you don't see any errors in your terminal, the code works!
-
-*/
-
+// Constants
 var DIMENSIONS = 8;
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-var occupied_tiles = new Array(DIMENSIONS);
-for (var i = 0; i < occupied_tiles.length; i++) {
-    occupied_tiles[i] = new Array(DIMENSIONS);
-}
+var NUM_HEALTHWELLS = 1;
+var NUM_MINES = 2;
+var NUM_ENEMIES = 1;
+var NUM_FRIENDS = 1;
 
 
 //Get the helper file and the Game logic
@@ -44,56 +21,28 @@ var enemyMoveFunction = function(gameData, helpers) {
 }
 
 
-//Makes a new game with a 5x5 board
+//Make a new game with a DIMENSIONSxDIMENSIONS board
 var game = new Game(DIMENSIONS);
-
-//Add a health well in the middle of the board
-
-var x,y;
-x = randomInt(0, DIMENSIONS);
-y = randomInt(0, DIMENSIONS);
-occupied_tiles[x][y] = 1;
-game.addHealthWell(x, y);
-
-//Add diamond mines on either side of the health well
-x = randomInt(0, DIMENSIONS);
-y = randomInt(0, DIMENSIONS);
-while (occupied_tiles[x][y] == 1) {
-    x = randomInt(0, DIMENSIONS);
-    y = randomInt(0, DIMENSIONS);
+/*
+ *  Add health wells, diamond mines, enemies, friends, and myHero
+ */
+for (var i = 0; i < NUM_HEALTHWELLS; i++) {
+    helpers.addRandomHealthWell(game)
 }
 
-occupied_tiles[x][y] = 1;
-game.addDiamondMine(x, y);
-
-x = randomInt(0, DIMENSIONS);
-y = randomInt(0, DIMENSIONS);
-while (occupied_tiles[x][y] == 1) {
-    x = randomInt(0, DIMENSIONS);
-    y = randomInt(0, DIMENSIONS);
+for (var i = 0; i < NUM_MINES; i++) {
+    helpers.addRandomDiamondMine(game);
 }
-occupied_tiles[x][y] = 1;
-game.addDiamondMine(x, y);
 
-//Add your hero in the top left corner of the map (team 0)
-x = randomInt(0, DIMENSIONS);
-y = randomInt(0, DIMENSIONS);
-while (occupied_tiles[x][y] == 1) {
-    x = randomInt(0, DIMENSIONS);
-    y = randomInt(0, DIMENSIONS);
+for (var i = 0; i < NUM_ENEMIES; i++) {
+    helpers.addRandomEnemy(game);
 }
-occupied_tiles[x][y] = 1;
-game.addHero(x, y, 'MyHero', 0);
 
-//Add an enemy hero in the bottom left corner of the map (team 1)
-x = randomInt(0, DIMENSIONS);
-y = randomInt(0, DIMENSIONS);
-while (occupied_tiles[x][y] == 1) {
-    x = randomInt(0, DIMENSIONS);
-    y = randomInt(0, DIMENSIONS);
+for (var i = 0; i < NUM_FRIENDS; i++) {
+    helpers.addRandomFriend(game);
 }
-occupied_tiles[x][y] = 1;
-game.addHero(x, y, 'Enemy', 1);
+
+helpers.addRandomMyHero(game);
 
 console.log('About to start the game!  Here is what the board looks like:');
 
@@ -103,7 +52,7 @@ console.log('About to start the game!  Here is what the board looks like:');
 game.board.inspect();
 
 //Play a very short practice game
-var turnsToPlay = 15;
+var turnsToPlay = 20;
 
 for (var i=0; i<turnsToPlay; i++) {
   var hero = game.activeHero;
