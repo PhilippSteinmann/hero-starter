@@ -91,6 +91,23 @@ var move = function(gameData, helpers) {
   });
   var distanceToHealthWell = healthWellStats.distance;
   var directionToHealthWell = healthWellStats.direction;
+
+  var nearestEnemy = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero,
+    function(boardTile) {
+        if (boardTile.type = "Enemy")
+            return true;
+    });
+
+  var distanceToNearestEnemy = nearestEnemy.distance;
+  var directionToNearestEnemy = nearestEnemy.direction;
+  var healthOfNearestEnemy = nearestEnemy.health;
+
+  if (distanceToNearestEnemy < 2) {
+        if (myHero.health > healthOfNearestEnemy)
+            return directionToNearestEnemy;
+        else
+            return helpers.oppositeDirection(directionToNearestEnemy);
+  }
   
 
   if (myHero.health < 40) {

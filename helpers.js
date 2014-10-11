@@ -246,4 +246,17 @@ helpers.findNearestTeamMember = function(gameData) {
   return pathInfoObject.direction;
 };
 
+helpers.oppositeDirection = function(direction) {
+    if (direction == "North")
+        return "South";
+    else if (direction == "South")
+        return "North";
+    else if (direction == "West")
+        return "East";
+    else if (direction == "East")
+        return "West";
+    else
+        return "Stay";
+};
+
 module.exports = helpers;

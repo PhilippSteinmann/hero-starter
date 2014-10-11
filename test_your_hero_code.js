@@ -18,6 +18,17 @@ To run:
 
 */
 
+var DIMENSIONS = 8;
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+var occupied_tiles = new Array(DIMENSIONS);
+for (var i = 0; i < occupied_tiles.length; i++) {
+    occupied_tiles[i] = new Array(DIMENSIONS);
+}
+
+
 //Get the helper file and the Game logic
 var helpers = require('./helpers.js');
 var Game = require('./game_logic/Game.js');
@@ -32,21 +43,57 @@ var enemyMoveFunction = function(gameData, helpers) {
   return choices[Math.floor(Math.random()*4)];
 }
 
+
 //Makes a new game with a 5x5 board
-var game = new Game(5);
+var game = new Game(DIMENSIONS);
 
 //Add a health well in the middle of the board
-game.addHealthWell(2,2);
+
+var x,y;
+x = randomInt(0, DIMENSIONS);
+y = randomInt(0, DIMENSIONS);
+occupied_tiles[x][y] = 1;
+game.addHealthWell(x, y);
 
 //Add diamond mines on either side of the health well
-game.addDiamondMine(2,1);
-game.addDiamondMine(2,3);
+x = randomInt(0, DIMENSIONS);
+y = randomInt(0, DIMENSIONS);
+while (occupied_tiles[x][y] == 1) {
+    x = randomInt(0, DIMENSIONS);
+    y = randomInt(0, DIMENSIONS);
+}
+
+occupied_tiles[x][y] = 1;
+game.addDiamondMine(x, y);
+
+x = randomInt(0, DIMENSIONS);
+y = randomInt(0, DIMENSIONS);
+while (occupied_tiles[x][y] == 1) {
+    x = randomInt(0, DIMENSIONS);
+    y = randomInt(0, DIMENSIONS);
+}
+occupied_tiles[x][y] = 1;
+game.addDiamondMine(x, y);
 
 //Add your hero in the top left corner of the map (team 0)
-game.addHero(0, 0, 'MyHero', 0);
+x = randomInt(0, DIMENSIONS);
+y = randomInt(0, DIMENSIONS);
+while (occupied_tiles[x][y] == 1) {
+    x = randomInt(0, DIMENSIONS);
+    y = randomInt(0, DIMENSIONS);
+}
+occupied_tiles[x][y] = 1;
+game.addHero(x, y, 'MyHero', 0);
 
 //Add an enemy hero in the bottom left corner of the map (team 1)
-game.addHero(4, 4, 'Enemy', 1);
+x = randomInt(0, DIMENSIONS);
+y = randomInt(0, DIMENSIONS);
+while (occupied_tiles[x][y] == 1) {
+    x = randomInt(0, DIMENSIONS);
+    y = randomInt(0, DIMENSIONS);
+}
+occupied_tiles[x][y] = 1;
+game.addHero(x, y, 'Enemy', 1);
 
 console.log('About to start the game!  Here is what the board looks like:');
 
@@ -76,4 +123,5 @@ for (var i=0; i<turnsToPlay; i++) {
   console.log(hero.name + ' has ' + hero.health + ' health')
   game.handleHeroTurn(direction);
   game.board.inspect();
+  console.log("\n\n\n\n");
 }
