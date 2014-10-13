@@ -109,11 +109,19 @@ Hero.prototype.loseMine = function(diamondMine) {
 
 
 Hero.prototype.getCode = function() {
+  if (this.name == "MyHero")
+      return "YOU";
+
   var idStr = this.id.toString();
   if (idStr.length === 1) {
     idStr = '0' + idStr;
   }
-  return 'H' + idStr;
+
+  // Return F for FRIEND if team = 0, else E for ENEMY
+  if (this.team == 0)
+      return 'F' + idStr;
+  else
+      return 'E' + idStr;
 };
 
 module.exports = Hero;

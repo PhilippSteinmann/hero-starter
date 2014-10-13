@@ -326,4 +326,58 @@ helpers.addRandomMyHero = function(game) {
     game.addHero(x, y, "MyHero", 0);
 }
 
+helpers.findObjectsInRadius = function(game, x, y, radius, tileCallBack) {
+    // array to return, contains Tile obects
+    var results = [];
+
+    // 8 possible directions from tile
+    var translations = [[1, 0], [-1, 0], [0, 1], [0, -1], [-1, 1], [1, 1], [1, -1], [-1, -1]];
+
+    // all tiles we've checked already.
+    // 1D so that we can add every checked tile here, and then use it as a 
+    // starting point in the next iteration.
+    var checked_already_1d = [];
+    checked_already_1d.push([x, y]);
+
+
+    // all tiles we've checked aleady.
+    // 2D so that we can quickly check whether tile has been checked already.
+    var checked_already_2d = [];
+    for (var col_n = 0; col_n < game.board.tiles.length; col_n++) {
+        var col = [];
+        for (var row_n = 0; row_n < game.board.tiles.length; row_n++)
+            col.push(0);
+        checked_already_2d.push(col);
+    }
+    checked_already_2d[x][y] = 1;
+    
+    // At iteration = 0, we check all 8 directions from the starting tile.
+    // At iteration = 1, we check all 8 directions of all tiles we've checked already.
+    for (var iteration = 0; iteration < radius; iteration++) {
+        // For every checked tile
+        for (var checked_tile in checked_already_1d) {
+            // For every direction (of 8)
+            for (var translation in translations) {
+
+                // Compute (x, y) of new tile to check
+                var x = checked_tile[0] + translation[0];
+                var y = checked_tile[1] + translation[1];
+
+                // If within the board and not checked yet
+                if (validCoordinates(game.board, y, x) &&  checked_already_2d[x][y] == 0) {
+                    // If it's what we're lookng for
+                    if (tileCallBack(game.board.tiles[y][x])) {
+                        results.push(game.board.tiles[y][x]);
+                        checked_already_1d.push([x, y]);
+                        checked_already_2d[x][y] = 1;
+                    }
+                }
+                checked_already_1d.push([x, y]);
+                checked_already_2d[x][y] = 1;
+            }
+        }
+    }
+    return results
+}
+
 module.exports = helpers;
