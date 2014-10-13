@@ -12,7 +12,7 @@ var move = function(gameData, helpers) {
 
 
     var enemies_closeby = helpers.findObjectsInRadius(gameData, myHero.distanceFromLeft, myHero.distanceFromTop, 3, function(tile) {
-        if (boardTile.type == "Enemy")
+        if (tile.type == "Enemy")
         return true;
     });
 

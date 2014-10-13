@@ -277,11 +277,9 @@ helpers.randomEmptyTile = function(game) {
 
     // If tile is occupied, return nearest unoccupied tile
     else {
-        console.log("Search");
         var nearestUnoccupied = helpers.findNearestObjectDirectionAndDistance(game.board, randomTile, function(tile) {
             return tile.type == "Unoccupied";
         });
-        console.log(nearestUnoccupied);
         return [nearestUnoccupied.coords[0], nearestUnoccupied.coords[1]];
     }
 }
@@ -327,6 +325,7 @@ helpers.addRandomMyHero = function(game) {
 }
 
 helpers.findObjectsInRadius = function(game, x, y, radius, tileCallBack) {
+    console.log("HELLO");
     // array to return, contains Tile obects
     var results = [];
 
@@ -336,46 +335,55 @@ helpers.findObjectsInRadius = function(game, x, y, radius, tileCallBack) {
     // all tiles we've checked already.
     // 1D so that we can add every checked tile here, and then use it as a 
     // starting point in the next iteration.
-    var checked_already_1d = [];
-    checked_already_1d.push([x, y]);
+    var checked_tiles_1d = [];
+    checked_tiles_1d.push([x, y]);
 
 
     // all tiles we've checked aleady.
     // 2D so that we can quickly check whether tile has been checked already.
-    var checked_already_2d = [];
+    var checked_tiles_2d = [];
     for (var col_n = 0; col_n < game.board.tiles.length; col_n++) {
         var col = [];
         for (var row_n = 0; row_n < game.board.tiles.length; row_n++)
             col.push(0);
-        checked_already_2d.push(col);
+        checked_tiles_2d.push(col);
     }
-    checked_already_2d[x][y] = 1;
+    checked_tiles_2d[x][y] = 1;
     
     // At iteration = 0, we check all 8 directions from the starting tile.
     // At iteration = 1, we check all 8 directions of all tiles we've checked already.
     for (var iteration = 0; iteration < radius; iteration++) {
+
+        // A temporary array in which we put the ones we check this round.
+        // If we put checked tiles straight into checked_tiles_1d, there's an infinite loop.
+        var checked_in_this_iteration = [];
+
         // For every checked tile
-        for (var checked_tile in checked_already_1d) {
+        for (var n = 0; n < checked_tiles_1d.length; n++) {
+            var checked_tile = checked_tiles_1d[n];
+
             // For every direction (of 8)
-            for (var translation in translations) {
+            for (var m = 0; m < translations.length; m++) {
+                var translation = translations[m];
 
                 // Compute (x, y) of new tile to check
                 var x = checked_tile[0] + translation[0];
                 var y = checked_tile[1] + translation[1];
 
                 // If within the board and not checked yet
-                if (validCoordinates(game.board, y, x) &&  checked_already_2d[x][y] == 0) {
-                    // If it's what we're lookng for
-                    if (tileCallBack(game.board.tiles[y][x])) {
-                        results.push(game.board.tiles[y][x]);
-                        checked_already_1d.push([x, y]);
-                        checked_already_2d[x][y] = 1;
+                if (helpers.validCoordinates(game.board, y, x)) {
+                    if (checked_tiles_2d[x][y] == 0) {
+                        // If it's what we're lookng for
+                        if (tileCallBack(game.board.tiles[y][x])) {
+                            results.push(game.board.tiles[y][x]);
+                        }
                     }
+                    checked_in_this_iteration.push([x, y]);
+                    checked_tiles_2d[x][y] = 1;
                 }
-                checked_already_1d.push([x, y]);
-                checked_already_2d[x][y] = 1;
             }
         }
+        var checked_tiles_1d = checked_tiles_1d.concat(checked_in_this_iteration);
     }
     return results
 }
