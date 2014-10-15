@@ -2,7 +2,7 @@
 var DIMENSIONS = 8;
 var NUM_HEALTHWELLS = 1;
 var NUM_MINES = 2;
-var NUM_ENEMIES = 1;
+var NUM_ENEMIES = 3;
 var NUM_FRIENDS = 1;
 
 
@@ -35,11 +35,11 @@ for (var i = 0; i < NUM_MINES; i++) {
 }
 
 for (var i = 0; i < NUM_ENEMIES; i++) {
-    helpers.addRandomEnemy(game);
+    helpers.addRandomEnemy(game, i);
 }
 
 for (var i = 0; i < NUM_FRIENDS; i++) {
-    helpers.addRandomFriend(game);
+    helpers.addRandomFriend(game, i);
 }
 
 helpers.addRandomMyHero(game);

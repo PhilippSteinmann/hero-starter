@@ -301,19 +301,20 @@ helpers.addRandomDiamondMine = function(game) {
 }
 
 // Add an enemy (Team 1) at a random location
-helpers.addRandomEnemy = function(game) {
+helpers.addRandomEnemy = function(game, i) {
     var randomTile = helpers.randomEmptyTile(game);
     var x = randomTile[0];
     var y = randomTile[1];
-    game.addHero(x, y, "Enemy (" + x + "," + y + ")", 1);
+    //game.addHero(x, y, "Enemy (" + x + "," + y + ")", 1);
+    game.addHero(x, y, "Enemy " + i, 1);
 }
 
 // Add a friend (Team 0) at a random location
-helpers.addRandomFriend = function(game) {
+helpers.addRandomFriend = function(game, i) {
     var randomTile = helpers.randomEmptyTile(game);
     var x = randomTile[0];
     var y = randomTile[1];
-    game.addHero(x, y, "Friend (" + x + "," + y + ")", 0);
+    game.addHero(x, y, "Friend " + i, 0);
 }
 
 // Add the hero (Team 0) at a random location
@@ -325,7 +326,6 @@ helpers.addRandomMyHero = function(game) {
 }
 
 helpers.findObjectsInRadius = function(game, x, y, radius, tileCallBack) {
-    console.log("HELLO");
     // array to return, contains Tile obects
     var results = [];
 
@@ -386,6 +386,31 @@ helpers.findObjectsInRadius = function(game, x, y, radius, tileCallBack) {
         var checked_tiles_1d = checked_tiles_1d.concat(checked_in_this_iteration);
     }
     return results
+}
+
+helpers.getAverageAngle = function(myHero, objects) {
+    var sum_angles = 0;
+    objects.forEach(function(object) {
+        sum_angles += helpers.computeAngle(myHero, object);
+    } );
+    return sum_angles / objects.length;
+}
+
+helpers.computeAngle = function(myHero, object) {
+    var x1 = myHero.fromLeft;
+    var y1 = myHero.fromTop;
+
+    var x2 = object.fromLeft;
+    var y2 = object.fromTop;
+
+    var angle_radians = Math.atan((y1 - y2) / (x1 - x2));
+    var angle_deg = angle_radians * 180 / pi;
+
+    return angle_deg;
+}
+
+helpers.round_direction = function(angle) {
+    return "North";
 }
 
 module.exports = helpers;

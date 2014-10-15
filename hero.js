@@ -16,8 +16,34 @@ var move = function(gameData, helpers) {
         return true;
     });
 
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+    console.log(enemies_closeby.length);
+
     if (enemies_closeby.length >= 2) {
-        return "Stay"; // flee, change later
+        var average_angle = helpers.getAverageAngle(myHero, enemies_closeby);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        console.log(average_angle);
+        var flee_direction = average_angle - 180;
+        return helpers.round_direction(flee_direction)
     }
 
     else if (enemies_closeby.length == 1) {
